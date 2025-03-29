@@ -29,21 +29,17 @@ export default function Layout() {
                         elevation: 0,
                         shadowOpacity: 0,
                     },
-                    headerRight: () => (
-                        <TouchableOpacity
-                            style={{
-                                marginRight: 15,
-                                backgroundColor: 'rgba(255,255,255,0.3)',
-                                borderRadius: 20,
-                                padding: 5
-                            }}
-                            onPress={() => router.push("/profile")}
-                        >
-                            <Ionicons name="person" size={24} color={green} />
-                        </TouchableOpacity>
-                    ),
                 }}
             >
+                <Drawer.Screen
+                    name="profile"
+                    options={{
+                        drawerLabel: 'Profilo',
+                        drawerIcon: ({ color, size }) => (
+                            <Ionicons name="person" size={size} color={color} style={styles.icon} />
+                        ),
+                    }}
+                />
                 <Drawer.Screen
                     name="index"
                     options={{
@@ -54,20 +50,12 @@ export default function Layout() {
                     }}
                 />
 
-                <Drawer.Screen
-                    name="profile"
-                    options={{
-                        drawerLabel: 'Profile',
-                        drawerIcon: ({ color, size }) => (
-                            <Ionicons name="person" size={size} color={color} style={styles.icon} />
-                        ),
-                    }}
-                />
+
 
                 <Drawer.Screen
                     name="badge"
                     options={{
-                        drawerLabel: 'Badges',
+                        drawerLabel: 'Trofei',
                         drawerIcon: ({ color, size }) => (
                             <Ionicons name="trophy" size={size} color={color} style={styles.icon} />
                         ),
@@ -76,7 +64,7 @@ export default function Layout() {
                 <Drawer.Screen
                     name="history"
                     options={{
-                        drawerLabel: 'History',
+                        drawerLabel: 'Storico',
                         drawerIcon: ({ color, size }) => (
                             <Ionicons name="bar-chart" size={size} color={color} style={styles.icon} />
                         ),

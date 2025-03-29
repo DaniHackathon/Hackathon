@@ -15,7 +15,9 @@ const styles = StyleSheet.create({
     bubble: {
         width: "80%",
         height: "100%",
-        backgroundColor: "white",
+        backgroundColor: 'rgba(255,255,255,0.1)',
+        padding: 15,
+        alignItems: 'center',
         paddingVertical: 12,
         paddingHorizontal: 18,
         borderRadius: 12,
@@ -26,7 +28,7 @@ const styles = StyleSheet.create({
     },
     text: {
         fontFamily: "Patrick-hand",
-        color: "black",
+        color: "white",
         fontSize: 16,
     },
     tail: {

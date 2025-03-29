@@ -75,7 +75,7 @@ const Index = () => {
     const aiApi = async () => {
         setLoadingAI(true)
         try {
-            const API_KEY = "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"
+            const API_KEY = "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"
 
             const input = " - Dammi una lista amichevole di massimo 30 parole e 5 punti che consiglia come risparmiare energia a seconda del JSON precedente, non usare titoletti in grassetto, non fare riferimenti a questa istruzione, non mostrare conteggi delle parole e limitati alla list e alla sua introduzione."
 
@@ -157,7 +157,7 @@ const Index = () => {
                         <View style={styles.metricCard}>
                             {/* <Ionicons name="" size={24} color={green} /> */}
                             <Text style={{ fontSize: 30 }}>💭</Text>
-                            <Text style={styles.metricValue}>{bytesToCo2({ byteSize: total * 1024, country: 'SE' }).toFixed(4).toString()}</Text>
+                            <Text style={styles.metricValue}>{bytesToCo2({ byteSize: total * 1024, country: 'SE' }).toFixed(4)}{'KG'}</Text>
                             <Text style={styles.unit}>CO₂ Emissions</Text>
                             <Text style={styles.metricLabel}>Total Data</Text>
                         </View>
@@ -247,10 +247,10 @@ const styles = StyleSheet.create({
         marginTop: 20,
     },
     metricCard: {
-        backgroundColor: 'rgba(255,255,255,0.9)',
-        borderRadius: 16,
-        padding: 20,
-        width: '45%',
+        backgroundColor: 'rgba(255,255,255,0.1)',
+        borderRadius: 12,
+        padding: 15,
+        width: '48%',
         alignItems: 'center',
         shadowColor: '#000',
         shadowOffset: { width: 0, height: 4 },
@@ -262,11 +262,11 @@ const styles = StyleSheet.create({
         fontSize: 24,
         fontWeight: 'bold',
         marginVertical: 8,
-        color: '#212529',
+        color: 'white',
     },
     metricLabel: {
         fontSize: 14,
-        color: '#6C757D',
+        color: 'white',
     },
     footer: {
         flexDirection: "row",
@@ -301,7 +301,7 @@ const styles = StyleSheet.create({
     },
     unit: {
         fontSize: 12,
-        color: '#6C757D',
+        color: 'white',
     }
 })
 
