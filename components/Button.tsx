@@ -3,11 +3,11 @@ import React, { useEffect } from 'react'
 import { green } from "@/constant/Color";
 import { useFonts } from 'expo-font';
 import { SplashScreen } from 'expo-router';
-const GreenButton: React.FC = ({ onPress }: any) => {
+const GreenButton: React.FC = ({ onPress, title }: any) => {
 
     return (
         <TouchableOpacity style={styles.button} onPress={onPress}>
-            <Text style={styles.text}>Button</Text>
+            <Text style={styles.text}>{title}</Text>
         </TouchableOpacity>
     )
 }
@@ -21,6 +21,7 @@ const styles = StyleSheet.create({
         alignItems: "center",
     },
     button: {
+        margin: 10,
         backgroundColor: green,
         paddingVertical: 10,
         paddingHorizontal: 20,

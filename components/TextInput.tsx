@@ -1,11 +1,11 @@
 import { StyleSheet, TextInput, View } from 'react-native';
 import React from 'react';
 
-const RoundedTextInput: React.FC = () => {
+const RoundedTextInput: React.FC = ({ placeholder }: any) => {
     return (
         <TextInput
             style={styles.input}
-            placeholder="Scrivi qui..."
+            placeholder={placeholder}
             placeholderTextColor="gray"
         />
     );
