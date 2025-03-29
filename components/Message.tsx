@@ -25,7 +25,7 @@ const styles = StyleSheet.create({
         borderBottomRightRadius: 0, // Evita la sovrapposizione con l'apice
     },
     text: {
-        fontFamily: "PatrickHand-Regular",
+        fontFamily: "Patrick-hand",
         color: "black",
         fontSize: 16,
     },

@@ -4,7 +4,7 @@ import PieChart from 'react-native-pie-chart';
 import { Ionicons } from '@expo/vector-icons';
 import MessageBubble from '@/components/Message';
 import { green } from '@/constant/Color';
-import Button from '@/components/Button';
+import { bytesToCo2 } from "bytes-to-co2";
 
 const Index = () => {
     const widthAndHeight = 200;
@@ -151,13 +151,15 @@ const Index = () => {
                 <View style={styles.content}>
                     <View style={styles.metricsContainer}>
                         <View style={styles.metricCard}>
-                            <Ionicons name="car" size={24} color={green} />
-                            <Text style={styles.metricValue}>{total}</Text>
+                            {/* <Ionicons name="" size={24} color={green} /> */}
+                            <Text style={{ fontSize: 30 }}>💭</Text>
+                            <Text style={styles.metricValue}>{bytesToCo2({ byteSize: total, country: 'SE' }).toFixed(5)}</Text>
+                            <Text style={styles.unit}>CO₂ Emissions</Text>
                             <Text style={styles.metricLabel}>Total Data</Text>
                         </View>
 
                         <View style={styles.metricCard}>
-                            <Ionicons name="time" size={24} color={green} />
+                            <Text style={{ fontSize: 30 }}>⏰</Text>
                             <Text style={styles.metricValue}>
                                 {chartData.reduce((sum, item) => sum + item.time, 0)}
                             </Text>
@@ -281,6 +283,10 @@ const styles = StyleSheet.create({
         width: '100%',
         height: '100%',
     },
+    unit: {
+        fontSize: 12,
+        color: '#6C757D',
+    }
 })
 
 export default Index

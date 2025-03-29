@@ -10,21 +10,30 @@ export default function Layout() {
         <GestureHandlerRootView style={{ flex: 1 }}>
             <Drawer
                 screenOptions={{
-                    drawerActiveTintColor: green, // Usa il tuo colore verde
-                    drawerLabelStyle: { marginLeft: -20 },
-                    headerTransparent: true, // Header completamente trasparente
-                    headerTitle: '', // Nessun titolo
-                    headerTintColor: green, // Colore delle icone
+                    drawerActiveTintColor: green,
+                    drawerInactiveTintColor: '#333',
+                    drawerLabelStyle: {
+                        marginLeft: -15,
+                        fontSize: 14,
+                        fontWeight: '500'
+                    },
+                    drawerItemStyle: {
+                        marginVertical: 4,
+                        paddingHorizontal: 8,
+                    },
+                    headerTransparent: true,
+                    headerTitle: '',
+                    headerTintColor: green,
                     headerStyle: {
                         backgroundColor: 'transparent',
-                        elevation: 0, // Rimuove ombra su Android
-                        shadowOpacity: 0, // Rimuove ombra su iOS
+                        elevation: 0,
+                        shadowOpacity: 0,
                     },
                     headerRight: () => (
                         <TouchableOpacity
                             style={{
                                 marginRight: 15,
-                                backgroundColor: 'rgba(255,255,255,0.3)', // Leggera trasparenza
+                                backgroundColor: 'rgba(255,255,255,0.3)',
                                 borderRadius: 20,
                                 padding: 5
                             }}
@@ -39,29 +48,37 @@ export default function Layout() {
                     name="index"
                     options={{
                         drawerLabel: 'Home',
-                        drawerIcon: ({ color, size }: any) => (
-                            <Ionicons name="home" size={size} color={color} />
+                        drawerIcon: ({ color, size }) => (
+                            <Ionicons name="home" size={size} color={color} style={styles.icon} />
                         ),
-                        // Sovrascrive le impostazioni globali se necessario
                     }}
                 />
 
-                {/* Altre schermate */}
                 <Drawer.Screen
                     name="profile"
                     options={{
                         drawerLabel: 'Profile',
-                        drawerIcon: ({ color, size }: any) => (
-                            <Ionicons name="person" size={size} color={color} />
+                        drawerIcon: ({ color, size }) => (
+                            <Ionicons name="person" size={size} color={color} style={styles.icon} />
+                        ),
+                    }}
+                />
+
+                <Drawer.Screen
+                    name="badge"
+                    options={{
+                        drawerLabel: 'Badges',
+                        drawerIcon: ({ color, size }) => (
+                            <Ionicons name="trophy" size={size} color={color} style={styles.icon} />
                         ),
                     }}
                 />
                 <Drawer.Screen
-                    name="badge"
+                    name="history"
                     options={{
-                        drawerLabel: 'Badge',
-                        drawerIcon: ({ color, size }: any) => (
-                            <Ionicons name="trophy" size={size} color={color} />
+                        drawerLabel: 'History',
+                        drawerIcon: ({ color, size }) => (
+                            <Ionicons name="bar-chart" size={size} color={color} style={styles.icon} />
                         ),
                     }}
                 />
@@ -69,3 +86,9 @@ export default function Layout() {
         </GestureHandlerRootView>
     );
 }
+
+const styles = {
+    icon: {
+        marginRight: 8, // Regola questo valore per allineare meglio le icone
+    },
+};
