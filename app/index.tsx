@@ -151,6 +151,7 @@ const styles = StyleSheet.create({
     },
     formContainer: {
         flex: 0.4,
+        alignItems: 'center',
         justifyContent: 'center',
     },
     input: {

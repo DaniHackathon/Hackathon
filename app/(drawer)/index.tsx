@@ -16,6 +16,7 @@ const Index = () => {
     const [apiResponse, setApiResponse] = useState("")
     const [json, setJson] = useState()
     const [loadingAI, setLoadingAI] = useState(false)
+    const [byteToCo2, setByteToCo2] = useState('')
 
     const platformColors = {
         'Instagram': '#E1306C',
@@ -156,7 +157,7 @@ const Index = () => {
                         <View style={styles.metricCard}>
                             {/* <Ionicons name="" size={24} color={green} /> */}
                             <Text style={{ fontSize: 30 }}>💭</Text>
-                            <Text style={styles.metricValue}>{bytesToCo2({ byteSize: total, country: 'SE' }).toFixed(4)}{'KG'}</Text>
+                            <Text style={styles.metricValue}>{bytesToCo2({ byteSize: total * 1024, country: 'SE' }).toFixed(4).toString()}</Text>
                             <Text style={styles.unit}>CO₂ Emissions</Text>
                             <Text style={styles.metricLabel}>Total Data</Text>
                         </View>
@@ -272,7 +273,7 @@ const styles = StyleSheet.create({
         flex: 0.2,
         justifyContent: 'center',
         alignItems: 'center',
-        paddingBottom: 30,
+        paddingBottom: 70,
     },
     messageBubble: {
         marginBottom: 20,
@@ -293,6 +294,8 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
     },
     smallImage: {
+        position: 'absolute',
+        bottom: -75, // Regola la posizione a piacere
         width: '100%',
         height: '100%',
     },

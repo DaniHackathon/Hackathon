@@ -155,6 +155,7 @@ const styles = StyleSheet.create({
         color: '#666',
     },
     formContainer: {
+        alignItems: "center",
         flex: 0.6,
         justifyContent: 'center',
     },
