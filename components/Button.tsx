@@ -1,8 +1,6 @@
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React, { useEffect } from 'react'
 import { green } from "@/constant/Color";
-import { useFonts } from 'expo-font';
-import { SplashScreen } from 'expo-router';
 const GreenButton: React.FC = ({ onPress, title }: any) => {
 
     return (

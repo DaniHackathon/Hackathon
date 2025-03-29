@@ -8,7 +8,6 @@ import { useEffect, useState } from "react";
 import { Ionicons } from '@expo/vector-icons';
 import { AUTH, FIRESTORE } from "@/firebaseConfig";
 import { signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
-import { doc, getDoc } from "firebase/firestore";
 
 export default function LoginScreen() {
     const [loaded, error] = useFonts({
@@ -19,7 +18,6 @@ export default function LoginScreen() {
     const [loading, setLoading] = useState(false);
 
     const login = async () => {
-        // router.push("/(drawer)")
         if (!email || !password) {
             Alert.alert("Error", "Please fill in all fields");
             return;
@@ -84,7 +82,7 @@ export default function LoginScreen() {
                 </TouchableOpacity>
 
                 <Button
-                    title={loading ? "LOADING..." : "LOGIN"}
+                    title={loading ? "Loading..." : "Login"}
                     onPress={login}
                     style={styles.loginButton}
                     textStyle={styles.loginButtonText}
@@ -163,7 +161,9 @@ const styles = StyleSheet.create({
         marginBottom: 24,
     },
     forgotPasswordText: {
+        marginRight: 16,
         color: green,
+        marginTop: 16,
         fontSize: 14,
     },
     loginButton: {

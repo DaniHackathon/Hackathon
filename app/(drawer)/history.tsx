@@ -64,46 +64,45 @@ const HistoryScreen = () => {
                 <ScrollView contentContainerStyle={styles.scrollContainer}>
                     <View style={styles.header}>
                         <Text style={styles.title}>Carbon Footprint History</Text>
-                        <Text style={styles.subtitle}>{userName}'s monthly impact</Text>
+                        <Text style={styles.subtitle}>{userName}Monthly impact</Text>
                     </View>
 
-                    <View style={styles.chartContainer}>
-                        <LineChart
-                            data={{
-                                labels: carbonData.labels,
-                                datasets: [
-                                    {
-                                        data: carbonData.values,
-                                        color: (opacity = 1) => `rgba(0, 200, 0, ${opacity})`,
-                                        strokeWidth: 2
-                                    }
-                                ],
-                                legend: ["CO2 Emissions (kg)"]
-                            }}
-                            width={Dimensions.get('window').width - 40}
-                            height={220}
-                            chartConfig={{
-                                backgroundGradientFrom: "#1e2923",
-                                backgroundGradientTo: "#08130d",
-                                decimalPlaces: 0,
-                                color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-                                labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-                                style: {
-                                    borderRadius: 16,
-                                },
-                                propsForDots: {
-                                    r: "4",
-                                    strokeWidth: "2",
-                                    stroke: green
+
+                    <LineChart
+                        data={{
+                            labels: carbonData.labels,
+                            datasets: [
+                                {
+                                    data: carbonData.values,
+                                    color: (opacity = 1) => `rgba(0, 200, 0, ${opacity})`,
+                                    strokeWidth: 2
                                 }
-                            }}
-                            bezier
-                            style={{
-                                marginVertical: 8,
+                            ],
+                            legend: ["CO2 Emissions (kg)"]
+                        }}
+                        width={Dimensions.get('window').width - 40}
+                        height={220}
+                        chartConfig={{
+                            backgroundGradientFrom: "#1e2923",
+                            backgroundGradientTo: "#08130d",
+                            decimalPlaces: 0,
+                            color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+                            labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+                            style: {
                                 borderRadius: 16,
-                            }}
-                        />
-                    </View>
+                            },
+                            propsForDots: {
+                                r: "4",
+                                strokeWidth: "2",
+                                stroke: green
+                            }
+                        }}
+                        bezier
+                        style={{
+                            marginVertical: 8,
+                            borderRadius: 16,
+                        }}
+                    />
 
                     <View style={styles.statsContainer}>
                         <View style={styles.statCard}>

@@ -1,10 +1,11 @@
 import { useEffect, useState } from 'react';
-import { ImageBackground, StyleSheet, Text, View, ActivityIndicator, Image } from 'react-native';
+import { ImageBackground, StyleSheet, Text, View, ActivityIndicator, Image, TouchableOpacity } from 'react-native';
 import PieChart from 'react-native-pie-chart';
 import { Ionicons } from '@expo/vector-icons';
 import MessageBubble from '@/components/Message';
 import { green } from '@/constant/Color';
 import { bytesToCo2 } from "bytes-to-co2";
+import { router } from 'expo-router';
 
 const Index = () => {
     const widthAndHeight = 200;
@@ -25,8 +26,8 @@ const Index = () => {
     };
 
     const mockData = [
-        { "platform": "Instagram", "time": 20, "data": 200 },
-        { "platform": "Facebook", "time": 30, "data": 10 },
+        { "platform": "Social", "time": 20, "data": 200 },
+        { "platform": "Social", "time": 30, "data": 10 },
         { "platform": "Twitter", "time": 40, "data": 378 },
         { "platform": "LinkedIn", "time": 50, "data": 300 },
         { "platform": "TikTok", "time": 60, "data": 600 },
@@ -73,8 +74,10 @@ const Index = () => {
     const aiApi = async () => {
         setLoadingAI(true)
         try {
-            const API_KEY = "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"
-            const input = " - Dammi una lista amichevole di massimo 30 parole e 5 punti che consiglia conme risparmiare energia a seconda del JSON precedente, non usare titoletti in grassetto, non fare riferimenti a questa istruzione, non mostrare conteggi delle parole e limitati alla list e alla sua introduzione.s";
+            const API_KEY = "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"
+
+            const input = " - Dammi una lista amichevole di massimo 30 parole e 5 punti che consiglia come risparmiare energia a seconda del JSON precedente, non usare titoletti in grassetto, non fare riferimenti a questa istruzione, non mostrare conteggi delle parole e limitati alla list e alla sua introduzione."
+
 
             const response: any = await fetch("https://openrouter.ai/api/v1/chat/completions", {
                 method: "POST",
@@ -87,16 +90,14 @@ const Index = () => {
                     "messages": [
                         {
                             "role": "user",
-                            "content": json + input
+                            "content": JSON.stringify(json) + input
                         }
                     ]
                 })
             });
-
-
             const data = await response.json();
             const markdownText =
-                data.choices?.[0]?.message?.content || 'No response received.';
+                data.choices?.[0]?.message?.content || 'Contenuto mancante.';
             setApiResponse(markdownText);
         } catch (error) {
             setApiResponse("C'è stato un errore con la richiesta. Riprovare.");
@@ -130,21 +131,23 @@ const Index = () => {
                     <Text style={styles.chartTitle}>Your Carbon Footprint</Text>
 
                     {chartData.length > 0 && (
-                        <PieChart
-                            widthAndHeight={widthAndHeight}
-                            series={chartData.map(item => ({
-                                value: item.data,
-                                color: platformColors[item.platform] || '#CCCCCC',
-                                label: {
-                                    text: item.platform,
-                                    fontSize: 10,
-                                    color: 'white',
-                                    fontWeight: 'bold'
-                                }
-                            }))}
-                            coverRadius={0.7}
-                            coverFill={'rgba(255,255,255,0.7)'}
-                        />
+                        <View style={styles.chartContainer}> {/* Nuovo container con ombra */}
+                            <PieChart
+                                widthAndHeight={widthAndHeight}
+                                series={chartData.map(item => ({
+                                    value: item.data,
+                                    color: platformColors[item.platform] || '#CCCCCC',
+                                    label: {
+                                        text: item.platform,
+                                        fontSize: 10,
+                                        color: 'white',
+                                        fontWeight: 'bold'
+                                    }
+                                }))}
+                                coverRadius={0.7}
+                                coverFill={'rgba(255,255,255,0.7)'}
+                            />
+                        </View>
                     )}
                 </View>
 
@@ -153,7 +156,7 @@ const Index = () => {
                         <View style={styles.metricCard}>
                             {/* <Ionicons name="" size={24} color={green} /> */}
                             <Text style={{ fontSize: 30 }}>💭</Text>
-                            <Text style={styles.metricValue}>{bytesToCo2({ byteSize: total, country: 'SE' }).toFixed(5)}</Text>
+                            <Text style={styles.metricValue}>{bytesToCo2({ byteSize: total, country: 'SE' }).toFixed(4)}{'KG'}</Text>
                             <Text style={styles.unit}>CO₂ Emissions</Text>
                             <Text style={styles.metricLabel}>Total Data</Text>
                         </View>
@@ -161,7 +164,7 @@ const Index = () => {
                         <View style={styles.metricCard}>
                             <Text style={{ fontSize: 30 }}>⏰</Text>
                             <Text style={styles.metricValue}>
-                                {chartData.reduce((sum, item) => sum + item.time, 0)}
+                                {chartData.reduce((sum, item: any) => sum + item.time, 0)}m
                             </Text>
                             <Text style={styles.metricLabel}>Total Time</Text>
                         </View>
@@ -173,13 +176,13 @@ const Index = () => {
                         loading={loadingAI}
                         message={apiResponse}
                     />
-                    <View style={styles.imageContainer}>
+                    <TouchableOpacity style={styles.imageContainer} onPress={() => { router.push("/chat") }}>
                         <Image
                             source={require("@/animations/main.gif")}
                             style={styles.smallImage}
                             resizeMode="contain"
                         />
-                    </View>
+                    </TouchableOpacity>
 
 
                 </View>
@@ -200,6 +203,14 @@ const styles = StyleSheet.create({
         backgroundColor: 'rgba(0,0,0,0.3)', // Sfondo semi-trasparente per migliorare la leggibilità
         paddingHorizontal: 16,
     },
+    chartContainer: {
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.3,
+        shadowRadius: 6,
+        elevation: 5,
+        borderRadius: 100, // Metà della widthAndHeight per un cerchio perfetto
+    },
     header: {
         flex: 0.4,
         justifyContent: 'center',
@@ -207,6 +218,7 @@ const styles = StyleSheet.create({
         paddingTop: 40,
     },
     appTitle: {
+        fontFamily: "Patrick-hand",
         fontSize: 32,
         fontWeight: 'bold',
         color: 'white',
@@ -216,6 +228,7 @@ const styles = StyleSheet.create({
         textShadowRadius: 3,
     },
     chartTitle: {
+        fontFamily: "Patrick-hand",
         fontSize: 18,
         color: 'white',
         marginBottom: 24,
