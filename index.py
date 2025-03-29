@@ -2,6 +2,8 @@ from http.server import BaseHTTPRequestHandler
 import json
 import random
 
+# API Python hostata con vercel.com su https://python-hello-world-jade-two.vercel.app/
+
 class handler(BaseHTTPRequestHandler):
 
     def do_OPTIONS(self):
