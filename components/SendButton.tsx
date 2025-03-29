@@ -12,6 +12,7 @@ const SendButton: React.FC = () => {
 
 const styles = StyleSheet.create({
     button: {
+
         backgroundColor: "white",
         width: 50,
         height: 50,

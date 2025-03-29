@@ -7,35 +7,46 @@ import { router, SplashScreen } from "expo-router";
 import { useEffect, useState } from "react";
 import { Ionicons } from '@expo/vector-icons';
 import { AUTH, FIRESTORE } from "@/firebaseConfig";
-import { signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
-import { doc, getDoc } from "firebase/firestore";
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import { doc, setDoc } from "firebase/firestore";
 
-export default function LoginScreen() {
+export default function RegisterScreen() {
     const [loaded, error] = useFonts({
         'Patrick-hand': require('@/assets/fonts/PatrickHand-Regular.ttf'),
     });
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [confirmPassword, setConfirmPassword] = useState("");
+    const [username, setUsername] = useState("");
     const [loading, setLoading] = useState(false);
 
-    const login = async () => {
-        // router.push("/(drawer)")
-        if (!email || !password) {
+    const register = async () => {
+        if (!email || !password || !confirmPassword || !username) {
             Alert.alert("Error", "Please fill in all fields");
+            return;
+        }
+
+        if (password !== confirmPassword) {
+            Alert.alert("Error", "Passwords don't match");
             return;
         }
 
         setLoading(true);
         try {
-            await signInWithEmailAndPassword(AUTH, email, password);
+            const userCredential = await createUserWithEmailAndPassword(AUTH, email, password);
+
+            // Salva informazioni aggiuntive in Firestore
+            await setDoc(doc(FIRESTORE, "users", userCredential.user.uid), {
+                username,
+                email,
+            });
             router.replace("/(drawer)");
         } catch (error) {
-            Alert.alert("Errore di Login", "email o password sbagliate");
+            Alert.alert("Registration Error", error.message);
         } finally {
             setLoading(false);
         }
     };
-
 
     useEffect(() => {
         if (loaded || error) {
@@ -57,10 +68,19 @@ export default function LoginScreen() {
                     resizeMode="contain"
                 />
                 <Text style={styles.title}>eCO2Bytes</Text>
+                <Text style={styles.subtitle}>Create your account</Text>
             </View>
 
-            {/* Login Form */}
+            {/* Registration Form */}
             <View style={styles.formContainer}>
+                <TextInput
+                    placeholder="Username"
+                    icon="person-outline"
+                    containerStyle={styles.input}
+                    value={username}
+                    onChangeText={setUsername}
+                    autoCapitalize="none"
+                />
                 <TextInput
                     placeholder="Email"
                     icon="mail-outline"
@@ -78,56 +98,34 @@ export default function LoginScreen() {
                     value={password}
                     onChangeText={setPassword}
                 />
-
-                <TouchableOpacity style={styles.forgotPassword}>
-                    <Text style={styles.forgotPasswordText}>Forgot password?</Text>
-                </TouchableOpacity>
+                <TextInput
+                    placeholder="Confirm Password"
+                    icon="lock-closed-outline"
+                    secureTextEntry
+                    containerStyle={styles.input}
+                    value={confirmPassword}
+                    onChangeText={setConfirmPassword}
+                />
 
                 <Button
-                    title={loading ? "LOADING..." : "LOGIN"}
-                    onPress={login}
-                    style={styles.loginButton}
-                    textStyle={styles.loginButtonText}
+                    title={loading ? "CREATING ACCOUNT..." : "REGISTER"}
+                    onPress={register}
+                    style={styles.registerButton}
+                    textStyle={styles.registerButtonText}
                     disabled={loading}
                 />
             </View>
 
-            {/* Divider */}
-            <View style={styles.dividerContainer}>
-                <View style={styles.dividerLine} />
-                <Text style={styles.dividerText}>or</Text>
-                <View style={styles.dividerLine} />
-            </View>
-
-            {/* Social Login */}
-            <View style={styles.socialContainer}>
-                <Button
-                    title="Continue with Google"
-                    icon="logo-google"
-                    style={styles.socialButton}
-                    textStyle={styles.socialButtonText}
-                    disabled={loading}
-                />
-                <Button
-                    title="Continue with Apple"
-                    icon="logo-apple"
-                    style={styles.socialButton}
-                    textStyle={styles.socialButtonText}
-                    disabled={loading}
-                />
-            </View>
-
-            {/* Sign Up Footer */}
+            {/* Login Footer */}
             <View style={styles.footer}>
-                <Text style={styles.footerText}>Don't have an account? </Text>
-                <TouchableOpacity onPress={() => router.push("/register")}>
-                    <Text style={styles.signUpText}>Sign up</Text>
+                <Text style={styles.footerText}>Already have an account? </Text>
+                <TouchableOpacity onPress={() => router.push("/")}>
+                    <Text style={styles.loginText}>Login</Text>
                 </TouchableOpacity>
             </View>
         </SafeAreaView>
     );
 }
-
 
 const styles = StyleSheet.create({
     container: {
@@ -136,77 +134,44 @@ const styles = StyleSheet.create({
         paddingHorizontal: 24,
     },
     logoContainer: {
-        flex: 0.3,
+        flex: 0.25,
         justifyContent: 'center',
         alignItems: 'center',
     },
     logo: {
-        width: 120,
-        height: 120,
-        marginBottom: 16,
+        width: 100,
+        height: 100,
+        marginBottom: 12,
     },
     title: {
         fontFamily: 'Patrick-hand',
         fontSize: 32,
         color: green,
-        marginBottom: 8,
+        marginBottom: 4,
+    },
+    subtitle: {
+        fontFamily: 'Patrick-hand',
+        fontSize: 18,
+        color: '#666',
     },
     formContainer: {
-        flex: 0.4,
+        flex: 0.6,
         justifyContent: 'center',
     },
     input: {
         marginBottom: 16,
     },
-    forgotPassword: {
-        alignSelf: 'flex-end',
-        marginBottom: 24,
-    },
-    forgotPasswordText: {
-        color: green,
-        fontSize: 14,
-    },
-    loginButton: {
+    registerButton: {
         backgroundColor: green,
         height: 50,
         borderRadius: 8,
         justifyContent: 'center',
+        marginTop: 10,
     },
-    loginButtonText: {
+    registerButtonText: {
         color: 'white',
         fontSize: 16,
         fontWeight: 'bold',
-    },
-    dividerContainer: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        marginVertical: 20,
-    },
-    dividerLine: {
-        flex: 1,
-        height: 1,
-        backgroundColor: '#E0E0E0',
-    },
-    dividerText: {
-        marginHorizontal: 10,
-        color: '#9E9E9E',
-        fontSize: 14,
-    },
-    socialContainer: {
-        flex: 0.2,
-        justifyContent: 'center',
-    },
-    socialButton: {
-        backgroundColor: 'white',
-        borderWidth: 1,
-        borderColor: '#E0E0E0',
-        height: 50,
-        borderRadius: 8,
-        marginBottom: 12,
-    },
-    socialButtonText: {
-        color: '#333',
-        fontSize: 14,
     },
     footer: {
         flexDirection: 'row',
@@ -216,7 +181,7 @@ const styles = StyleSheet.create({
     footerText: {
         color: '#9E9E9E',
     },
-    signUpText: {
+    loginText: {
         color: green,
         fontWeight: 'bold',
     },

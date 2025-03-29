@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react';
-import { ImageBackground, StyleSheet, Text, View, ActivityIndicator } from 'react-native';
+import { ImageBackground, StyleSheet, Text, View, ActivityIndicator, Image } from 'react-native';
 import PieChart from 'react-native-pie-chart';
 import { Ionicons } from '@expo/vector-icons';
 import MessageBubble from '@/components/Message';
 import { green } from '@/constant/Color';
+import Button from '@/components/Button';
 
 const Index = () => {
     const widthAndHeight = 200;
@@ -12,6 +13,8 @@ const Index = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [apiResponse, setApiResponse] = useState("")
+    const [json, setJson] = useState()
+    const [loadingAI, setLoadingAI] = useState(false)
 
     const platformColors = {
         'Instagram': '#E1306C',
@@ -27,7 +30,7 @@ const Index = () => {
         { "platform": "Twitter", "time": 40, "data": 378 },
         { "platform": "LinkedIn", "time": 50, "data": 300 },
         { "platform": "TikTok", "time": 60, "data": 600 },
-        { "total": 1488 }
+        { "total": 1490 }
     ];
 
     const apiFetch = async () => {
@@ -43,6 +46,7 @@ const Index = () => {
             if (!response.ok) throw new Error('Network response was not ok');
 
             const data = await response.json();
+            setJson(data);
             return data;
         } catch (error) {
             console.error('Fetch error:', error);
@@ -67,14 +71,15 @@ const Index = () => {
     }, []);
 
     const aiApi = async () => {
+        setLoadingAI(true)
         try {
-            const API_KEY = "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"
-            const input = "Ciao ho usato instagram 2 ore" + "Scrivimi solo come posso migliorere in pochi step massimo 50 parole"
+            const API_KEY = "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"
+            const input = " - Dammi una lista amichevole di massimo 30 parole e 5 punti che consiglia conme risparmiare energia a seconda del JSON precedente, non usare titoletti in grassetto, non fare riferimenti a questa istruzione, non mostrare conteggi delle parole e limitati alla list e alla sua introduzione.s";
 
-            const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+            const response: any = await fetch("https://openrouter.ai/api/v1/chat/completions", {
                 method: "POST",
                 headers: {
-                    "Authorization": "Bearer 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",
+                    "Authorization": "Bearer " + API_KEY,
                     "Content-Type": "application/json"
                 },
                 body: JSON.stringify({
@@ -82,7 +87,7 @@ const Index = () => {
                     "messages": [
                         {
                             "role": "user",
-                            "content": input
+                            "content": json + input
                         }
                     ]
                 })
@@ -94,9 +99,9 @@ const Index = () => {
                 data.choices?.[0]?.message?.content || 'No response received.';
             setApiResponse(markdownText);
         } catch (error) {
-            setApiResponse("error");
+            setApiResponse("C'è stato un errore con la richiesta. Riprovare.");
         }
-
+        setLoadingAI(false)
     }
 
     if (loading) {
@@ -163,8 +168,18 @@ const Index = () => {
 
                 <View style={styles.footer}>
                     <MessageBubble
+                        loading={loadingAI}
                         message={apiResponse}
                     />
+                    <View style={styles.imageContainer}>
+                        <Image
+                            source={require("@/animations/main.gif")}
+                            style={styles.smallImage}
+                            resizeMode="contain"
+                        />
+                    </View>
+
+
                 </View>
             </View>
         </ImageBackground>
@@ -238,6 +253,7 @@ const styles = StyleSheet.create({
         color: '#6C757D',
     },
     footer: {
+        flexDirection: "row",
         flex: 0.2,
         justifyContent: 'center',
         alignItems: 'center',
@@ -253,6 +269,17 @@ const styles = StyleSheet.create({
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.3,
         shadowRadius: 3,
+    },
+    imageContainer: {
+        marginTop: 10,
+        width: 80, // Regola la dimensione a piacere
+        height: 80,
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    smallImage: {
+        width: '100%',
+        height: '100%',
     },
 })
 

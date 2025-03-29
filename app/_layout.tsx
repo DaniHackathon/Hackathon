@@ -7,6 +7,11 @@ export default function RootLayout() {
                 headerShown: false,
             }}
         />
+        <Stack.Screen name="register"
+            options={{
+                headerShown: false,
+            }}
+        />
         <Stack.Screen name="(drawer)"
             options={{
                 headerShown: false,

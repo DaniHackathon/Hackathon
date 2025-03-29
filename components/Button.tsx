@@ -28,7 +28,7 @@ const styles = StyleSheet.create({
         borderRadius: 8,
     },
     text: {
-        fontFamily: "PatrickHand-Regular",
+        fontFamily: 'Patrick-hand',
         color: "white",
         fontSize: 18,
         textAlign: "center",

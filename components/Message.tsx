@@ -1,11 +1,12 @@
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import React from 'react';
+import TextSkeleton from './Skeleton';
 
 
-const MessageBubble: React.FC = ({ message }: any) => {
+const MessageBubble: React.FC = ({ message, loading }: any) => {
     return (
         <View style={styles.bubble}>
-            <Text style={styles.text}>{message}</Text>
+            {loading ? (<Text>Eco AI sta generando...</Text>) : <Text style={styles.text}>{message}</Text>}
         </View>
     );
 }
