@@ -26,7 +26,6 @@ const ProfileScreen = () => {
         const unsubscribe = onAuthStateChanged(AUTH, async (user) => {
             if (user) {
                 setAuthUser(user);
-                // Recupera i dati aggiuntivi da Firestore
                 try {
                     const userDoc = await getDoc(doc(FIRESTORE, "users", user.uid));
                     if (userDoc.exists()) {
@@ -37,7 +36,6 @@ const ProfileScreen = () => {
                             loading: false
                         });
                     } else {
-                        // Se non esiste il documento, usa i dati di base
                         setUserData({
                             name: user.displayName || "Utente",
                             email: user.email,
@@ -69,9 +67,9 @@ const ProfileScreen = () => {
                 style={styles.backgroundImage}
                 resizeMode="cover"
             >
-                <SafeAreaView style={styles.loadingContainer}>
+                <View style={[styles.overlay, { justifyContent: 'center', alignItems: 'center' }]}>
                     <ActivityIndicator size="large" color={green} />
-                </SafeAreaView>
+                </View>
             </ImageBackground>
         );
     }
@@ -82,52 +80,55 @@ const ProfileScreen = () => {
             style={styles.backgroundImage}
             resizeMode="cover"
         >
-            <SafeAreaView style={styles.container}>
-                {/* Header */}
-                <View style={styles.header}>
-                </View>
+            <View style={styles.overlay}>
+                <SafeAreaView style={styles.container}>
+                    {/* Header */}
+                    <View style={styles.header}>
+                        <Text style={styles.appTitle}>Il mio Profilo</Text>
+                    </View>
 
-                {/* Profile Section */}
-                <View style={styles.profileSection}>
-                    <View style={styles.avatarContainer}>
-                        <View style={styles.avatar}>
-                            <Ionicons name="person" size={60} color={green} />
+                    {/* Profile Section */}
+                    <View style={styles.profileSection}>
+                        <View style={styles.avatarContainer}>
+                            <View style={styles.avatar}>
+                                <Ionicons name="person" size={60} color={green} />
+                            </View>
+                        </View>
+
+                        <Text style={styles.name}>{userData.name}</Text>
+                        <Text style={styles.email}>{userData.email}</Text>
+
+                        <View style={styles.statsContainer}>
+                            <View style={styles.statItem}>
+                                <Text style={styles.statValue}>78</Text>
+                                <Text style={styles.statLabel}>Carbon Score</Text>
+                            </View>
+                            <View style={styles.statItem}>
+                                <Text style={styles.statValue}>5</Text>
+                                <Text style={styles.statLabel}>Achievements</Text>
+                            </View>
                         </View>
                     </View>
-                    <Text style={styles.email}>{userData.email}</Text>
 
-                    <View style={styles.statsContainer}>
-                        <View style={styles.statItem}>
-                            <Text style={styles.statValue}>78</Text>
-                            <Text style={styles.statLabel}>Carbon Score</Text>
-                        </View>
-                        <View style={styles.statItem}>
-                            <Text style={styles.statValue}>5</Text>
-                            <Text style={styles.statLabel}>Achievements</Text>
-                        </View>
-                        <View style={styles.statItem}>
-                            <Text style={styles.statValue}>23</Text>
-                            <Text style={styles.statLabel}>Friends</Text>
-                        </View>
+                    {/* Menu Section */}
+                    <View style={styles.menuSection}>
+                        {menuItems.map((item, index) => (
+                            <TouchableOpacity key={index} style={styles.menuItem}>
+                                <View style={styles.menuIcon}>
+                                    <Ionicons name={item.icon} size={24} color={green} />
+                                </View>
+                                <Text style={styles.menuText}>{item.label}</Text>
+                                <Ionicons name="chevron-forward" size={20} color="white" />
+                            </TouchableOpacity>
+                        ))}
                     </View>
-                </View>
 
-                {/* Menu Section */}
-                <View style={styles.menuSection}>
-                    {menuItems.map((item, index) => (
-                        <TouchableOpacity key={index} style={styles.menuItem}>
-                            <Ionicons name={item.icon} size={24} color="white" />
-                            <Text style={styles.menuText}>{item.label}</Text>
-                            <Ionicons name="chevron-forward" size={20} color="white" />
-                        </TouchableOpacity>
-                    ))}
-                </View>
-
-                {/* Footer */}
-                <View style={styles.footer}>
-                    <Text style={styles.footerText}>Member since {userData.joinDate}</Text>
-                </View>
-            </SafeAreaView>
+                    {/* Footer */}
+                    <View style={styles.footer}>
+                        <Text style={styles.footerText}>Member since {userData.joinDate}</Text>
+                    </View>
+                </SafeAreaView>
+            </View>
         </ImageBackground>
     );
 };
@@ -138,30 +139,34 @@ const styles = StyleSheet.create({
         width: '100%',
         height: '100%',
     },
+    overlay: {
+        flex: 1,
+        backgroundColor: 'rgba(0,0,0,0.3)',
+        paddingHorizontal: 16,
+    },
     container: {
         flex: 1,
-        backgroundColor: 'rgba(0,0,0,0.5)',
-    },
-    loadingContainer: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
     },
     header: {
-        padding: 20,
-        alignItems: 'flex-end',
+        paddingTop: 40,
+        alignItems: 'center',
+        marginBottom: 20,
     },
-    editButton: {
-        backgroundColor: green,
-        padding: 8,
-        borderRadius: 20,
+    appTitle: {
+        fontFamily: "Patrick-hand",
+        fontSize: 32,
+        fontWeight: 'bold',
+        color: 'white',
+        textShadowColor: 'rgba(0,0,0,0.5)',
+        textShadowOffset: { width: 1, height: 1 },
+        textShadowRadius: 3,
     },
     profileSection: {
         alignItems: 'center',
-        padding: 20,
+        marginBottom: 30,
     },
     avatarContainer: {
-        marginBottom: 20,
+        marginBottom: 15,
     },
     avatar: {
         width: 120,
@@ -174,13 +179,14 @@ const styles = StyleSheet.create({
         borderColor: green,
     },
     name: {
-        fontSize: 28,
+        fontFamily: "Patrick-hand",
+        fontSize: 24,
         fontWeight: 'bold',
         color: 'white',
         marginBottom: 5,
-        textShadowColor: 'rgba(0,0,0,0.5)',
+        textShadowColor: 'rgba(0,0,0,0.3)',
         textShadowOffset: { width: 1, height: 1 },
-        textShadowRadius: 3,
+        textShadowRadius: 2,
     },
     email: {
         fontSize: 16,
@@ -189,13 +195,17 @@ const styles = StyleSheet.create({
     },
     statsContainer: {
         flexDirection: 'row',
-        justifyContent: 'space-around',
+        justifyContent: 'center',
         width: '100%',
         marginVertical: 20,
-        paddingHorizontal: 20,
     },
     statItem: {
         alignItems: 'center',
+        marginHorizontal: 20,
+        backgroundColor: 'rgba(255,255,255,0.1)',
+        borderRadius: 12,
+        padding: 15,
+        width: '40%',
     },
     statValue: {
         fontSize: 24,
@@ -205,12 +215,13 @@ const styles = StyleSheet.create({
     },
     statLabel: {
         fontSize: 14,
-        color: 'rgba(255,255,255,0.7)',
+        color: 'white',
     },
     menuSection: {
-        flex: 1,
-        marginTop: 20,
-        paddingHorizontal: 20,
+        backgroundColor: 'rgba(255,255,255,0.1)',
+        borderRadius: 16,
+        padding: 15,
+        marginHorizontal: 10,
     },
     menuItem: {
         flexDirection: 'row',
@@ -219,19 +230,26 @@ const styles = StyleSheet.create({
         borderBottomWidth: 1,
         borderBottomColor: 'rgba(255,255,255,0.2)',
     },
+    menuIcon: {
+        width: 30,
+        alignItems: 'center',
+    },
     menuText: {
         flex: 1,
         fontSize: 18,
         color: 'white',
-        marginLeft: 15,
+        marginLeft: 10,
+        fontFamily: "Patrick-hand",
     },
     footer: {
         padding: 20,
         alignItems: 'center',
+        marginTop: 20,
     },
     footerText: {
         color: 'rgba(255,255,255,0.6)',
         fontSize: 14,
+        fontFamily: "Patrick-hand",
     },
 });
 
